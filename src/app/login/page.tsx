@@ -51,8 +51,8 @@ export default function LoginPage (){
   position="top-center"
   reverseOrder={false}
 />
-        <div className="flex flex-col items-center bg-opacity-10 justify-center gap-2 h-[32rem] w-[32rem]  py-2 border border-black/30 shadow-xl rounded-lg  ">
-            <h1 className="text-4xl font-semibold text-primary ">{loading ? "Processing" : "Login"}</h1>
+        <div className="flex flex-col items-center bg-opacity-10 justify-center gap-2 h-[32rem] w-[32rem] max-sm:w-full py-2 border border-black/30 shadow-xl rounded-lg">
+            <h1 className="text-4xl max-sm:text-3xl font-semibold text-primary ">{loading ? "Processing" : "Login"}</h1>
             <hr />
             <div className="flex flex-col w-full items-center">
                 <label htmlFor="email" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">Email</label>

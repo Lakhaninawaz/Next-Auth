@@ -23,12 +23,12 @@ export default function Navbar() {
                         </a>
                     </div>
 
-                    <div className="hidden w-full md:flex md:items-center md:w-auto" id="menu">
-                        <ul className="pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0">
+                    <div className="m-0 w-auto" id="menu">
+                        <ul className="lg:m-3 max-lg:m-3 text-base text-gray-700 md:flex md:justify-between">
                           
                             <li>
                                 <Link
-                                    className="md:p-2 py-1 my-2 block hover:text-black hover:bg-blue-200 bg-blue-500 text-white font-medium rounded-lg"
+                                    className="p-2 inline sm:text-center py- my-2 hover:text-black hover:bg-blue-200 bg-blue-500 text-white font-medium rounded-lg "
                                     href="/signup"
                                 >Sign Up</Link>
                             </li>

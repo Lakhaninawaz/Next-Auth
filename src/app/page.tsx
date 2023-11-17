@@ -28,6 +28,7 @@ export default function Home() {
           rounded-lg
           my-16
           p-16
+          px-8
         "
       >
         <h1 className="text-2xl font-medium">Welcome to our page</h1>

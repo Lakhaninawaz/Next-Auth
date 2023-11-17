@@ -57,17 +57,17 @@ export default function SignupPage() {
 
   return (
     <>
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen py-2">
       <Toaster
         position="top-center"
         reverseOrder={false}
       />
       
-      <div className="flex flex-col items-center bg-opacity-10 justify-center gap-2 h-[34rem] w-[32rem]  py-2 border border-black/30 shadow-xl rounded-lg  ">
-        <h1 className="text-4xl font-semibold text-primary">{loading ? "Processing" : "Signup"}</h1>
+      <div className="flex flex-col items-center bg-opacity-10 justify-center gap-2 h-[34rem] w-[32rem] max-sm:w-full py-2 border border-black/30 shadow-xl rounded-lg">
+        <h1 className="text-4xl max-sm:text-3xl font-semibold text-primary">{loading ? "Processing" : "Signup"}</h1>
         <hr />
 
-        <div className="flex flex-col w-full items-center">
+        <div className="flex flex-col w-full max-sm:w-screen items-center max-sm:ml-3">
           <label htmlFor="username" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">Username</label>
           <input
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-secondary w-[80%]"
@@ -78,7 +78,7 @@ export default function SignupPage() {
             placeholder="username"
           />
         </div>
-        <div className="flex flex-col w-full items-center">
+        <div className="flex flex-col w-full max-sm:w-screen items-center max-sm:ml-3">
           <label htmlFor="email" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">Email</label>
           <input
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-secondary w-[80%]"
@@ -89,7 +89,7 @@ export default function SignupPage() {
             placeholder="email"
           />
         </div>
-        <div className="flex flex-col w-full items-center">
+        <div className="flex flex-col w-full max-sm:w-screen items-center max-sm:ml-3">
           <label htmlFor="password" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">Password</label>
           <input
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-secondary w-[80%]"
