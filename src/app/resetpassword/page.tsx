@@ -1,4 +1,5 @@
 "use client"
+
 import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
@@ -9,10 +10,15 @@ const ForgotPasswordPage = () => {
     email: "",
   });
 
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [myToast, setMyToast] = useState(false);
 
   const onForgotEmailVerify = async (e:any) => {
+    if(user?.email === ""){
+      setError("Please Fill the Email Fields");
+      toast.error("Please Fill the Email Fields");
+  } else {
     e.preventDefault();
     try {
       setLoading(true);
@@ -24,6 +30,7 @@ const ForgotPasswordPage = () => {
       toast.error("Email Not Found!");
       throw new Error(error);
     }
+  }
   };
 
   return (
@@ -33,10 +40,10 @@ const ForgotPasswordPage = () => {
           <h1>Reset password link has been sent to your email address!</h1>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center gap-2 h-[32rem] w-[32rem]  py-2 border border-black/30 shadow-xl rounded-lg">
-          <h1 className="text-3xl font-semibold mb-5">{loading ? "Processing" : "Forgot Password ...?" }</h1>
+        <div className="flex flex-col justify-center items-center gap-2 h-[32rem] w-[32rem] max-sm:w-screen py-2 border border-black/30 shadow-xl rounded-lg">
+          <h1 className="text-3xl max-sm:text-2xl font-semibold mb-5">{loading ? "Processing" : "Forgot Password ...?" }</h1>
 
-          <form className="flex flex-col items-center w-full justify-start p-3 gap-4">
+          <div className="flex flex-col items-center w-full justify-start p-3 gap-4">
             <label htmlFor="email" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">
               Email:
             </label>
@@ -48,14 +55,14 @@ const ForgotPasswordPage = () => {
               placeholder="Enter your email"
               onChange={(e) => setUser({ email: e.target.value })}
             />
-
+            {error && <div className="text-red-600 animate-pulse">{error}</div>}
             <button
               className="py-2 px-4 text-base hover:scale-110 border border-black/40 rounded-lg hover:bg-black hover:text-white transition mb-4 focus:outline-none"
               onClick={onForgotEmailVerify}
             >
               Submit
             </button>
-          </form>
+          </div>
 
           <Link href="/login" className="cursor underline text-blue-500 text-lg mt-2">
             Visit Login Page
