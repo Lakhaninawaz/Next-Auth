@@ -2,40 +2,30 @@ import Link from "next/link";
 
 export default function Navbar() {
     return (
-        <>
-            <header>
-                <nav
-                    className="
-          flex flex-wrap
-          items-center
-          justify-between
-          w-full
-          py-4
-          md:py-0
-          px-4
-          text-lg text-gray-700
-          bg-white
-        "
-                >
-                    <div>
-                        <a href="#">
-                            <h1>First Next Js</h1>
-                        </a>
-                    </div>
+        <header className="sticky top-0 z-20">
+            <nav className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-xl shadow-lg shadow-black/20">
+                <Link href="/" className="flex items-center gap-2 text-white">
+                    <span className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-sky-500 flex items-center justify-center text-sm font-semibold">
+                        NA
+                    </span>
+                    <span className="text-lg font-semibold">Next Auth</span>
+                </Link>
 
-                    <div className="m-0 w-auto" id="menu">
-                        <ul className="lg:m-3 max-lg:m-3 text-base text-gray-700 md:flex md:justify-between">
-                          
-                            <li>
-                                <Link
-                                    className="p-2 inline sm:text-center py- my-2 hover:text-black hover:bg-blue-200 bg-blue-500 text-white font-medium rounded-lg "
-                                    href="/signup"
-                                >Sign Up</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </header>
-        </>
-    )
+                <div className="flex items-center gap-2 text-sm">
+                    <Link
+                        href="/login"
+                        className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-white hover:bg-white/10 transition"
+                    >
+                        Login
+                    </Link>
+                    <Link
+                        href="/signup"
+                        className="rounded-xl bg-gradient-to-r from-indigo-500 to-sky-500 px-4 py-2 font-semibold text-white shadow-md shadow-indigo-500/25 hover:brightness-110 transition"
+                    >
+                        Sign up
+                    </Link>
+                </div>
+            </nav>
+        </header>
+    );
 }

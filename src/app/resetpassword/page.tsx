@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import axios from "axios";
 import Link from "next/link";
@@ -6,71 +6,83 @@ import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 const ForgotPasswordPage = () => {
-  const [user, setUser] = useState({
-    email: "",
-  });
-
+  const [user, setUser] = useState({ email: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [myToast, setMyToast] = useState(false);
 
-  const onForgotEmailVerify = async (e:any) => {
-    if(user?.email === ""){
-      setError("Please Fill the Email Fields");
-      toast.error("Please Fill the Email Fields");
-  } else {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/users/forgotpassword", user);
-      setMyToast(true);
-      console.log("Email Found", response.data);
-    } catch (error:any) {
-      setLoading(false);
-      toast.error("Email Not Found!");
-      throw new Error(error);
+  const onForgotEmailVerify = async (e: any) => {
+    if (user.email === "") {
+      setError("Please fill the email field");
+      toast.error("Please fill the email field");
+    } else {
+      e.preventDefault();
+      try {
+        setLoading(true);
+        const response = await axios.post("/api/users/forgotpassword", user);
+        setMyToast(true);
+      } catch (err: any) {
+        setLoading(false);
+        toast.error("Email not found!");
+      }
     }
-  }
   };
 
   return (
-    <div className="flex items-center min-h-screen justify-center">
-      {myToast ? (
-        <div className="items-center font-bold text-green-500 rounded-md border-8 border-l-green-600 p-3">
-          <h1>Reset password link has been sent to your email address!</h1>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center gap-2 h-[32rem] w-[32rem] max-sm:w-screen py-2 border border-black/30 shadow-xl rounded-lg">
-          <h1 className="text-3xl max-sm:text-2xl font-semibold mb-5">{loading ? "Processing" : "Forgot Password ...?" }</h1>
-
-          <div className="flex flex-col items-center w-full justify-start p-3 gap-4">
-            <label htmlFor="email" className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">
-              Email:
-            </label>
-            <input
-              className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 w-[80%] text-secondary"
-              type="email"
-              id="email"
-              value={user.email}
-              placeholder="Enter your email"
-              onChange={(e) => setUser({ email: e.target.value })}
-            />
-            {error && <div className="text-red-600 animate-pulse">{error}</div>}
-            <button
-              className="py-2 px-4 text-base hover:scale-110 border border-black/40 rounded-lg hover:bg-black hover:text-white transition mb-4 focus:outline-none"
-              onClick={onForgotEmailVerify}
-            >
-              Submit
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center justify-center px-4">
+      <Toaster position="top-center" />
+      <div className="w-full max-w-md">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8">
+          <div className="flex flex-col gap-2 mb-6">
+            <h1 className="text-3xl font-semibold">
+              Forgot your password?
+            </h1>
+            <p className="text-sm text-slate-300">
+              Enter your email and we’ll send you a reset link.
+            </p>
           </div>
 
-          <Link href="/login" className="cursor underline text-blue-500 text-lg mt-2">
-            Visit Login Page
-          </Link>
-        </div>
-      )}
+          {myToast ? (
+            <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 text-emerald-100 px-4 py-3 text-sm">
+              Reset password link has been sent to your email address.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <label className="text-sm text-slate-200">
+                Email
+                <input
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40 transition"
+                  type="email"
+                  value={user.email}
+                  placeholder="you@example.com"
+                  onChange={(e) => setUser({ email: e.target.value })}
+                />
+              </label>
 
-      <Toaster />
+              {error && (
+                <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
+                  {error}
+                </div>
+              )}
+
+              <button
+                className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-sky-500 py-3 font-semibold shadow-lg shadow-indigo-500/25 transition hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={onForgotEmailVerify}
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send reset link"}
+              </button>
+
+              <div className="text-sm text-slate-300 text-center">
+                Remembered it?{" "}
+                <Link href="/login" className="text-white hover:text-indigo-200">
+                  Back to login
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 connect()
 
-export async function POST(request: NextRequest, response: NextResponse){
+export async function POST(request: NextRequest){
     try {
         
     const reqBody = await request.json();

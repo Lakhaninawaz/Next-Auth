@@ -60,47 +60,51 @@ export default function VerifyEmailReset() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen py-2">
-      {verified && (
-        <div className="flex flex-col justify-center items-center gap-2 h-[32rem] w-[32rem]  py-2 border border-black/30 shadow-xl rounded-lg">
-        <h1 className="text-4xl font-semibold text-primary">{loading ? "Processing" : "Enter New Password"}</h1>
-          <h2>
-            {token && (
-              <div className=" items-center font-bold text-green-500 rounded-md border-8 border-l-green-600 mb-6  p-3">
-                Email Verified Successfully
-              </div>
-            )}
-          </h2>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center justify-center px-4">
+      <Toaster position="top-center" />
+      <div className="w-full max-w-md">
+        {verified ? (
+          <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8">
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Password reset</p>
+            <h1 className="mt-2 text-3xl font-semibold">
+              {loading ? "Processing" : "Set a new password"}
+            </h1>
+            <div className="mt-4 rounded-xl border border-emerald-400/40 bg-emerald-500/10 text-emerald-100 px-4 py-3">
+              Email verified successfully
+            </div>
 
-          <form className="flex flex-col items-center w-full justify-start p-3 gap-4">
-            
+            <form className="mt-6 flex flex-col gap-4">
+              <label className="text-sm text-slate-200">
+                New password
+                <input
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40 transition"
+                  type="password"
+                  id="password"
+                  value={user.password}
+                  placeholder="Enter your new password"
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
+                />
+              </label>
 
-            <label className="text-lg text-accent font-semibold block w-[80%] text-left mb-2">New Password :</label>
-            <input
-              className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 w-[80%] text-secondary"
-              type="text"
-              id="password"
-              value={user.password}
-              placeholder="Enter your new password"
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-            />
-
-            <button className="py-2 px-4 text-base hover:scale-110 border border-black/40 rounded-lg hover:bg-black hover:text-white transition mb-4 focus:outline-none" onClick={onSet}>
-              Set New Password
-            </button>
-            <p className="text-red-500">Please do not refresh this page!</p>
-          </form>
-        </div>
-      )}
-      {error && (
-        <div>
-          <h2 className="text-2xl bg-red-500 text-black">Something Wrong!</h2>
-        </div>
-      )}
-
-
-
-      <Toaster />
+              <button
+                className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-sky-500 py-3 font-semibold shadow-lg shadow-indigo-500/25 transition hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={onSet}
+                disabled={loading || !user.password}
+              >
+                {loading ? "Saving..." : "Set new password"}
+              </button>
+              <p className="text-xs text-slate-400 text-center">Don&apos;t refresh this page.</p>
+            </form>
+          </div>
+        ) : (
+          error && (
+            <div className="bg-white/10 backdrop-blur-xl border border-red-500/30 text-red-200 rounded-2xl shadow-2xl p-8 text-center">
+              <h2 className="text-2xl font-semibold">Something went wrong</h2>
+              <p className="mt-2 text-sm">The verification link may be invalid or expired.</p>
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }
