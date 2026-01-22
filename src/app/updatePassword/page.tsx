@@ -2,10 +2,24 @@
 
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
-export default function VerifyEmailReset() {
+export default function UpdatePasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center justify-center px-4">
+          <p className="text-sm text-slate-200">Loading reset page...</p>
+        </div>
+      }
+    >
+      <VerifyEmailReset />
+    </Suspense>
+  );
+}
+
+function VerifyEmailReset() {
   const router = useRouter();
   const searchParams = useSearchParams();
 

@@ -3,10 +3,24 @@
 import axios from "axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 export default function VerifyEmailPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center justify-center px-4">
+                    <p className="text-sm text-slate-200">Loading verification page...</p>
+                </div>
+            }
+        >
+            <VerifyEmailContent />
+        </Suspense>
+    );
+}
+
+function VerifyEmailContent() {
     const [token, setToken] = useState("");
     const [verified, setVerified] = useState(false);
     const [error, setError] = useState("");
