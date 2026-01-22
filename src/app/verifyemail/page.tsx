@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -10,9 +11,11 @@ export default function VerifyEmailPage() {
     const [verified, setVerified] = useState(false);
     const [error, setError] = useState("");
 
-    const verifyUserEmail = async () => {
+    const searchParams = useSearchParams();
+
+    const verifyUserEmail = async (emailToken: string) => {
         try {
-            await axios.post("/api/users/verifyemail", { token });
+            await axios.post("/api/users/verifyemail", { token: emailToken });
             setVerified(true);
             toast.success("Email verified successfully");
         } catch (err: any) {
@@ -23,15 +26,21 @@ export default function VerifyEmailPage() {
     };
 
     useEffect(() => {
-        const urlToken = window.location.search.split("=")[1];
-        setToken(urlToken || "");
-    }, []);
+        const urlToken =
+            searchParams.get("token") || Array.from(searchParams.values())[0] || "";
+
+        if (!urlToken) {
+            setError("Verification link is missing or malformed");
+            return;
+        }
+
+        setToken(urlToken);
+    }, [searchParams]);
 
     useEffect(() => {
         if (token.length > 0) {
-            verifyUserEmail();
+            verifyUserEmail(token);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     return (

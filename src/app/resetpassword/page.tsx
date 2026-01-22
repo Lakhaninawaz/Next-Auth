@@ -22,8 +22,11 @@ const ForgotPasswordPage = () => {
         const response = await axios.post("/api/users/forgotpassword", user);
         setMyToast(true);
       } catch (err: any) {
+        const msg = err.response?.data?.error || err.response?.data?.message || "Failed to send reset email";
+        setError(msg);
+        toast.error(msg);
+      } finally {
         setLoading(false);
-        toast.error("Email not found!");
       }
     }
   };

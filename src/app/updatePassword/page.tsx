@@ -1,12 +1,13 @@
 "use client";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 export default function VerifyEmailReset() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
@@ -17,13 +18,11 @@ export default function VerifyEmailReset() {
     forgotPasswordToken: "",
   });
 
-  const verifyUserEmail = async () => {
+  const verifyUserEmail = async (resetToken: string) => {
     try {
-      await axios.post("/api/users/verifyemailpass", { token });
+      await axios.post("/api/users/verifyemailpass", { token: resetToken });
       setVerified(true);
-
-      user.forgotPasswordToken = token;
-      setUser(user);
+      setUser((prev) => ({ ...prev, forgotPasswordToken: resetToken }));
     } catch (error) {
       console.log(error);
       setError(true);
@@ -31,13 +30,20 @@ export default function VerifyEmailReset() {
   };
 
   useEffect(() => {
-    const urlToken = window.location.search.split("=")[1];
-    setToken(urlToken || "");
-  }, []);
+    const urlToken =
+      searchParams.get("token") || Array.from(searchParams.values())[0] || "";
+
+    if (!urlToken) {
+      setError(true);
+      return;
+    }
+
+    setToken(urlToken);
+  }, [searchParams]);
 
   useEffect(() => {
     if (token.length > 0) {
-      verifyUserEmail();
+      verifyUserEmail(token);
     }
   }, [token]);
 
@@ -46,7 +52,7 @@ export default function VerifyEmailReset() {
     try {
       setLoading(true)
 
-      const res = await axios.post("api/users/updatepassword", user);
+      const res = await axios.post("/api/users/updatepassword", user);
       console.log(res);
 
       toast.success(res.data.message);
@@ -97,10 +103,14 @@ export default function VerifyEmailReset() {
             </form>
           </div>
         ) : (
-          error && (
+          error ? (
             <div className="bg-white/10 backdrop-blur-xl border border-red-500/30 text-red-200 rounded-2xl shadow-2xl p-8 text-center">
               <h2 className="text-2xl font-semibold">Something went wrong</h2>
               <p className="mt-2 text-sm">The verification link may be invalid or expired.</p>
+            </div>
+          ) : (
+            <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 text-center">
+              <p className="text-sm text-slate-200">Validating your reset link...</p>
             </div>
           )
         )}
