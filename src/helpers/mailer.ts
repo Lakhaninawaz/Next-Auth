@@ -45,7 +45,7 @@ export const sendEmail = async ({ email, emailType, userId }: SendEmailArgs) => 
   const transport = nodemailer.createTransport({
     host,
     port,
-    secure: false,
+    secure: port === 465, // Use SSL only for port 465, TLS for 587
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_PASS,

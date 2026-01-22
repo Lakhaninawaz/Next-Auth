@@ -11,7 +11,7 @@ export default function VerifyEmailReset() {
 
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | false>(false);
   const [loading, setLoading ] = useState(false)
   const [user, setUser] = useState({
     password: "",
@@ -23,9 +23,10 @@ export default function VerifyEmailReset() {
       await axios.post("/api/users/verifyemailpass", { token: resetToken });
       setVerified(true);
       setUser((prev) => ({ ...prev, forgotPasswordToken: resetToken }));
-    } catch (error) {
-      console.log(error);
-      setError(true);
+    } catch (err: any) {
+      const msg = err.response?.data?.error || "The reset link is invalid or expired.";
+      console.log(err);
+      setError(msg);
     }
   };
 
@@ -34,7 +35,7 @@ export default function VerifyEmailReset() {
       searchParams.get("token") || Array.from(searchParams.values())[0] || "";
 
     if (!urlToken) {
-      setError(true);
+      setError("Reset token is missing from the URL.");
       return;
     }
 
@@ -106,7 +107,7 @@ export default function VerifyEmailReset() {
           error ? (
             <div className="bg-white/10 backdrop-blur-xl border border-red-500/30 text-red-200 rounded-2xl shadow-2xl p-8 text-center">
               <h2 className="text-2xl font-semibold">Something went wrong</h2>
-              <p className="mt-2 text-sm">The verification link may be invalid or expired.</p>
+              <p className="mt-2 text-sm">{error}</p>
             </div>
           ) : (
             <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 text-center">
