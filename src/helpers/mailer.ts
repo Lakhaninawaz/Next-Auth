@@ -17,8 +17,6 @@ export const sendEmail = async ({ email, emailType, userId }: SendEmailArgs) => 
     throw new Error("Email credentials are missing (EMAIL_USER / EMAIL_PASS)");
   }
 
-  const host = EMAIL_HOST || "sandbox.smtp.mailtrap.io";
-  const port = Number(EMAIL_PORT) || 2525;
   const from = EMAIL_FROM || "no-reply@example.com";
 
   // create a hashed Token
