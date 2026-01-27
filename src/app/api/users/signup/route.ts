@@ -24,26 +24,26 @@ export async function POST(request: NextRequest) {
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
 
-        //create a new user in the database
+        //create a new user in the database (but don't save yet)
         const newUser = new User({
             username,
             email,
             password: hashedPassword
         });
 
-        const savedUser = await newUser.save();
-        console.log(savedUser);
-
-        //send verification email
-
+        //send verification email BEFORE saving user
         await sendEmail({
             email,
             emailType: "VERIFY",
-            userId: savedUser._id
+            userId: newUser._id
         })
 
+        //save user after email is sent successfully
+        const savedUser = await newUser.save();
+        // console.log(savedUser);
+
         return NextResponse.json({
-            message: "User created Successfully",
+            message: "Verification email sent. Please verify your email to complete registration.",
             succeess: true,
             savedUser
         })
