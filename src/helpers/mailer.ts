@@ -8,9 +8,10 @@ interface SendEmailArgs {
   email: string;
   emailType: EmailType;
   userId: string;
+  updateDb?: boolean; // Optional flag to update database
 }
 
-export const sendEmail = async ({ email, emailType, userId }: SendEmailArgs) => {
+export const sendEmail = async ({ email, emailType, userId, updateDb = true }: SendEmailArgs) => {
   const { EMAIL_USER, EMAIL_PASS, EMAIL_HOST, EMAIL_PORT, EMAIL_FROM, DOMAIN } = process.env;
 
   if (!EMAIL_USER || !EMAIL_PASS) {
@@ -22,16 +23,19 @@ export const sendEmail = async ({ email, emailType, userId }: SendEmailArgs) => 
   // create a hashed Token
   const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
-  if (emailType === "VERIFY") {
-    await User.findByIdAndUpdate(userId, {
-      verifyToken: hashedToken,
-      verifyTokenExpiry: Date.now() + 3600000,
-    });
-  } else if (emailType === "RESET") {
-    await User.findByIdAndUpdate(userId, {
-      forgotPasswordToken: hashedToken,
-      forgotPasswordTokenExpiry: Date.now() + 3600000,
-    });
+  // Only update database if updateDb is true (for existing users)
+  if (updateDb) {
+    if (emailType === "VERIFY") {
+      await User.findByIdAndUpdate(userId, {
+        verifyToken: hashedToken,
+        verifyTokenExpiry: Date.now() + 3600000,
+      });
+    } else if (emailType === "RESET") {
+      await User.findByIdAndUpdate(userId, {
+        forgotPasswordToken: hashedToken,
+        forgotPasswordTokenExpiry: Date.now() + 3600000,
+      });
+    }
   }
 
   const baseDomain = (DOMAIN || "http://localhost:3000").replace(/\/+$/, "");
@@ -122,7 +126,8 @@ export const sendEmail = async ({ email, emailType, userId }: SendEmailArgs) => 
   };
 
   try {
-    return await transport.sendMail(mailOption);
+    await transport.sendMail(mailOption);
+    return hashedToken; // Return the token for use in signup
   } catch (error: any) {
     // surface the SMTP error up to the API route
     throw new Error(error.message || "Failed to send email");

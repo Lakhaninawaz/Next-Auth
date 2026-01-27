@@ -31,12 +31,17 @@ export async function POST(request: NextRequest) {
             password: hashedPassword
         });
 
-        //send verification email BEFORE saving user
-        await sendEmail({
+        //send verification email BEFORE saving user (updateDb=false since user not in DB yet)
+        const hashedToken = await sendEmail({
             email,
             emailType: "VERIFY",
-            userId: newUser._id
+            userId: newUser._id,
+            updateDb: false
         })
+
+        // Set the token returned by mailer on the new user
+        newUser.verifyToken = hashedToken;
+        newUser.verifyTokenExpiry = new Date(Date.now() + 3600000);
 
         //save user after email is sent successfully
         const savedUser = await newUser.save();
